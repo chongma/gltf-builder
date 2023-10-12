@@ -69,7 +69,7 @@ export interface GltfNode {
     mesh: number;
 }
 export interface GltfScene {
-    nodes: Array<any>;
+    nodes: Array<number>;
 }
 export interface GltfAsset {
     version: string;
