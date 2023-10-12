@@ -91,7 +91,7 @@ export interface GltfNode {
 }
 
 export interface GltfScene {
-    nodes: Array<any>
+    nodes: Array<number>
 }
 
 export interface GltfAsset {
