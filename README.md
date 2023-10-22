@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@chongma%2Fgltf-builder.svg)](https://www.npmjs.com/package/@chongma/gltf-builder)
+
 # Gltf builder
 
 The spec file `GltfBuilder.spec.ts` contains examples of usage.
