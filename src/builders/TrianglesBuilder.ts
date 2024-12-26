@@ -50,9 +50,9 @@ export class TrianglesBuilder {
     addNormal(normal: Point): number {
         this.normalCounter++
         const normalOffset = this.normalCounter * 3
-        this.verticesArray[normalOffset] = normal.x
-        this.verticesArray[normalOffset + 1] = normal.y
-        this.verticesArray[normalOffset + 2] = normal.z
+        this.normalsArray[normalOffset] = normal.x
+        this.normalsArray[normalOffset + 1] = normal.y
+        this.normalsArray[normalOffset + 2] = normal.z
         return this.normalCounter
     }
 
