@@ -1,6 +1,7 @@
 /// <reference types="node" />
 export declare const scale = 10000;
-export interface Point {
+export type Point = [number, number, number];
+export interface PointObject {
     x: number;
     y: number;
     z: number;

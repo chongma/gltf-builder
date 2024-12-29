@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LinesBuilder = void 0;
 var checkExtents_1 = require("../commands/checkExtents");
+var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint");
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var LinesBuilder = /** @class */ (function () {
@@ -22,14 +23,15 @@ var LinesBuilder = /** @class */ (function () {
         this.indexesArray[this.indexCounter] = index;
         return this.indexCounter;
     };
-    LinesBuilder.prototype.addVertex = function (vertex) {
+    LinesBuilder.prototype.addVertex = function (v) {
         this.vertexCounter++;
+        var vertex = !Array.isArray(v) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(v) : v;
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var pointOffset = this.vertexCounter * 3;
-        this.verticesArray[pointOffset] = vertex.x;
-        this.verticesArray[pointOffset + 1] = vertex.y;
-        this.verticesArray[pointOffset + 2] = vertex.z;
+        this.verticesArray[pointOffset] = vertex[0];
+        this.verticesArray[pointOffset + 1] = vertex[1];
+        this.verticesArray[pointOffset + 2] = vertex[2];
         return this.vertexCounter;
     };
     LinesBuilder.prototype.addLine = function (vertex1, vertex2) {

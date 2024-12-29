@@ -1,7 +1,8 @@
 import { checkExtents } from '../commands/checkExtents'
+import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, LineType, Lines, Point } from '../types/gltf'
+import { Extent, LineType, Lines, Point, PointObject } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class LinesBuilder {
@@ -31,14 +32,15 @@ export class LinesBuilder {
         return this.indexCounter
     }
 
-    addVertex(vertex: Point): number {
+    addVertex(v: Point | PointObject): number {
         this.vertexCounter++
+        let vertex = !Array.isArray(v) ? convertPointObjectToPoint(v) : v
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
         const pointOffset = this.vertexCounter * 3
-        this.verticesArray[pointOffset] = vertex.x
-        this.verticesArray[pointOffset + 1] = vertex.y
-        this.verticesArray[pointOffset + 2] = vertex.z
+        this.verticesArray[pointOffset] = vertex[0]
+        this.verticesArray[pointOffset + 1] = vertex[1]
+        this.verticesArray[pointOffset + 2] = vertex[2]
         return this.vertexCounter
     }
 

@@ -1,7 +1,8 @@
 import { checkExtents } from '../commands/checkExtents'
+import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, Point, TriangleType, Triangles } from '../types/gltf'
+import { Extent, Point, PointObject, TriangleType, Triangles } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class TrianglesBuilder {
@@ -36,23 +37,25 @@ export class TrianglesBuilder {
         return this.indexCounter
     }
 
-    addVertex(vertex: Point): number {
+    addVertex(v: Point | PointObject): number {
         this.vertexCounter++
+        let vertex = !Array.isArray(v) ? convertPointObjectToPoint(v) : v
+        const pointOffset = this.vertexCounter * 3
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
-        const pointOffset = this.vertexCounter * 3
-        this.verticesArray[pointOffset] = vertex.x
-        this.verticesArray[pointOffset + 1] = vertex.y
-        this.verticesArray[pointOffset + 2] = vertex.z
+        this.verticesArray[pointOffset] = vertex[0]
+        this.verticesArray[pointOffset + 1] = vertex[1]
+        this.verticesArray[pointOffset + 2] = vertex[2]
         return this.vertexCounter
     }
 
-    addNormal(normal: Point): number {
+    addNormal(n: Point | PointObject): number {
         this.normalCounter++
+        let normal = !Array.isArray(n) ? convertPointObjectToPoint(n) : n
         const normalOffset = this.normalCounter * 3
-        this.normalsArray[normalOffset] = normal.x
-        this.normalsArray[normalOffset + 1] = normal.y
-        this.normalsArray[normalOffset + 2] = normal.z
+        this.normalsArray[normalOffset] = normal[0]
+        this.normalsArray[normalOffset + 1] = normal[1]
+        this.normalsArray[normalOffset + 2] = normal[2]
         return this.normalCounter
     }
 
