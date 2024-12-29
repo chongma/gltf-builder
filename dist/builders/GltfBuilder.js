@@ -101,10 +101,12 @@ var GltfBuilder = /** @class */ (function () {
         var buffer = this.createBuffer(pc_buffer);
         var bufferView = this.createBufferView(buffer, pc_buffer, gltf_1.BufferViewTarget.ARRAY_BUFFER);
         var accessor = this.createAccessorVec3(bufferView, count, extent);
+        var material = this.createMaterial();
         var mesh = this.addMesh({
             primitives: [{
                     attributes: { POSITION: accessor },
                     // indices: 0
+                    material: material,
                     mode: 0
                 }]
         });
