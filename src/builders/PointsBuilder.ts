@@ -1,7 +1,8 @@
 import { checkExtents } from '../commands/checkExtents'
+import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, Point, PointCloud } from '../types/gltf'
+import { Extent, Point, PointCloud, PointObject } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class PointsBuilder {
@@ -18,18 +19,19 @@ export class PointsBuilder {
         this.scale = scale
     }
 
-    addVertex(vertex: Point): number {
+    addVertex(v: Point | PointObject): number {
         this.vertexCounter++
+        let vertex = !Array.isArray(v) ? convertPointObjectToPoint(v) : v
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
         const pointOffset = this.vertexCounter * 3
-        this.verticesArray[pointOffset] = vertex.x
-        this.verticesArray[pointOffset + 1] = vertex.y
-        this.verticesArray[pointOffset + 2] = vertex.z
+        this.verticesArray[pointOffset] = vertex[0]
+        this.verticesArray[pointOffset + 1] = vertex[1]
+        this.verticesArray[pointOffset + 2] = vertex[2]
         return this.vertexCounter
     }
 
-    addVertices(vertices: Point[]): void {
+    addVertices(vertices: Point[] | PointObject[]): void {
         vertices.map(vertex => this.addVertex(vertex))
     }
 

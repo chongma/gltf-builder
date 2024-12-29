@@ -2,23 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkExtents = void 0;
 function checkExtents(point, extent) {
-    if (point.x < extent.min.x) {
-        extent.min.x = point.x;
+    if (point[0] < extent.min[0]) {
+        extent.min[0] = point[0];
     }
-    if (point.y < extent.min.y) {
-        extent.min.y = point.y;
+    if (point[1] < extent.min[1]) {
+        extent.min[1] = point[1];
     }
-    if (point.z < extent.min.z) {
-        extent.min.z = point.z;
+    if (point[2] < extent.min[2]) {
+        extent.min[2] = point[2];
     }
-    if (point.x > extent.max.x) {
-        extent.max.x = point.x;
+    if (point[0] > extent.max[0]) {
+        extent.max[0] = point[0];
     }
-    if (point.y > extent.max.y) {
-        extent.max.y = point.y;
+    if (point[1] > extent.max[1]) {
+        extent.max[1] = point[1];
     }
-    if (point.z > extent.max.z) {
-        extent.max.z = point.z;
+    if (point[2] > extent.max[2]) {
+        extent.max[2] = point[2];
     }
 }
 exports.checkExtents = checkExtents;

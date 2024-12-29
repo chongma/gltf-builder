@@ -32,7 +32,20 @@ console.log(JSON.stringify(gltf))
 ```
 
 ## Writing triangles
-
+Use a triangles builder to build the line structure.  Then build it using the GltfBuilder
+```js
+const gltfBuilder = new GltfBuilder()
+const verticesCount = simple3DObject.vertices.length
+const indicesCount = simple3DObject.indices.length
+const normalsCount = simple3DObject.normals.length
+const trianglesBuilder = new TrianglesBuilder(verticesCount, indicesCount, normalsCount, scale, TriangleType.TRIANGLES)
+simple3DObject.vertices.forEach(vertex => trianglesBuilder.addVertex(vertex))
+simple3DObject.normals.forEach(normal => trianglesBuilder.addNormal(normal))
+simple3DObject.indices.forEach(index => trianglesBuilder.addIndex(index))
+trianglesBuilder.buildGltf(gltfBuilder)
+const gltf = gltfBuilder.build()
+console.log(JSON.stringify(gltf))
+```
 
 ## Writing Gltf to file
 The Gltf can be written to file by stringifying the JSON object

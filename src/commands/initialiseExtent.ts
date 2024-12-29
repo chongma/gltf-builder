@@ -4,7 +4,7 @@ const BIG_NUMBER = 1000000
 
 export function initialiseExtent(): Extent {
     return {
-        min: { x: BIG_NUMBER, y: BIG_NUMBER, z: BIG_NUMBER },
-        max: { x: -BIG_NUMBER, y: -BIG_NUMBER, z: -BIG_NUMBER }
+        min: [BIG_NUMBER, BIG_NUMBER, BIG_NUMBER],
+        max: [-BIG_NUMBER, -BIG_NUMBER, -BIG_NUMBER]
     }
 }

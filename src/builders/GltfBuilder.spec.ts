@@ -1,7 +1,8 @@
-import { LineType } from '../types/gltf'
+import { LineType, Point, TriangleType } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 import { LinesBuilder } from './LinesBuilder'
 import { PointsBuilder } from './PointsBuilder'
+import { TrianglesBuilder } from './TrianglesBuilder'
 
 describe('Gltf builder', () => {
     const vertices = [
@@ -33,6 +34,39 @@ describe('Gltf builder', () => {
         console.log(JSON.stringify(gltf))
     })
     it('Draw some triangles', () => {
-
+        const simple3DObject = {
+            vertices: [
+              // Vertex positions (x, y, z)
+              [0, 0, 0],  // Vertex 0: Bottom corner
+              [1, 0, 0],  // Vertex 1: Bottom right
+              [0.5, Math.sqrt(3) / 2, 0], // Vertex 2: Bottom left
+              [0.5, Math.sqrt(3) / 6, Math.sqrt(2 / 3)], // Vertex 3: Top vertex
+            ] as Point[],
+            normals: [
+              // Normals (x, y, z) - one per vertex
+              [0, 0, -1],  // Normal at Vertex 0
+              [0, 0, -1],  // Normal at Vertex 1
+              [0, 0, -1],  // Normal at Vertex 2
+              [0, 0, 1],   // Normal at Vertex 3
+            ] as Point[],
+            indices: [
+              // Triangles (each group of 3 indices forms a triangle)
+              0, 1, 2,  // Base triangle
+              0, 1, 3,  // Side triangle 1
+              1, 2, 3,  // Side triangle 2
+              2, 0, 3,  // Side triangle 3
+            ],
+          };
+        const gltfBuilder = new GltfBuilder()
+        const verticesCount = simple3DObject.vertices.length
+        const indicesCount = simple3DObject.indices.length
+        const normalsCount = simple3DObject.normals.length
+        const trianglesBuilder = new TrianglesBuilder(verticesCount, indicesCount, normalsCount, scale, TriangleType.TRIANGLES)
+        simple3DObject.vertices.forEach(vertex => trianglesBuilder.addVertex(vertex))
+        simple3DObject.normals.forEach(normal => trianglesBuilder.addNormal(normal))
+        simple3DObject.indices.forEach(index => trianglesBuilder.addIndex(index))
+        trianglesBuilder.buildGltf(gltfBuilder)
+        const gltf = gltfBuilder.build()
+        console.log(JSON.stringify(gltf))
     })
 })

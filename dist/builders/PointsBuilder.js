@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PointsBuilder = void 0;
 var checkExtents_1 = require("../commands/checkExtents");
+var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint");
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var PointsBuilder = /** @class */ (function () {
@@ -13,14 +14,15 @@ var PointsBuilder = /** @class */ (function () {
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
         this.scale = scale;
     }
-    PointsBuilder.prototype.addVertex = function (vertex) {
+    PointsBuilder.prototype.addVertex = function (v) {
         this.vertexCounter++;
+        var vertex = !Array.isArray(v) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(v) : v;
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var pointOffset = this.vertexCounter * 3;
-        this.verticesArray[pointOffset] = vertex.x;
-        this.verticesArray[pointOffset + 1] = vertex.y;
-        this.verticesArray[pointOffset + 2] = vertex.z;
+        this.verticesArray[pointOffset] = vertex[0];
+        this.verticesArray[pointOffset + 1] = vertex[1];
+        this.verticesArray[pointOffset + 2] = vertex[2];
         return this.vertexCounter;
     };
     PointsBuilder.prototype.addVertices = function (vertices) {

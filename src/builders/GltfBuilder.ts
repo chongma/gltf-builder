@@ -84,8 +84,8 @@ export class GltfBuilder {
             componentType: 5126,
             count,
             type: 'VEC3',
-            max: [extent.max.x, extent.max.y, extent.max.z],
-            min: [extent.min.x, extent.min.y, extent.min.z]
+            max: [extent.max[0], extent.max[1], extent.max[2]],
+            min: [extent.min[0], extent.min[1], extent.min[2]]
         }
         return this.addAccessor(accessor)
     }

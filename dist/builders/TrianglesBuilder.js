@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TrianglesBuilder = void 0;
 var checkExtents_1 = require("../commands/checkExtents");
+var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint");
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var TrianglesBuilder = /** @class */ (function () {
@@ -25,22 +26,24 @@ var TrianglesBuilder = /** @class */ (function () {
         this.indexesArray[this.indexCounter] = index;
         return this.indexCounter;
     };
-    TrianglesBuilder.prototype.addVertex = function (vertex) {
+    TrianglesBuilder.prototype.addVertex = function (v) {
         this.vertexCounter++;
+        var vertex = !Array.isArray(v) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(v) : v;
+        var pointOffset = this.vertexCounter * 3;
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
-        var pointOffset = this.vertexCounter * 3;
-        this.verticesArray[pointOffset] = vertex.x;
-        this.verticesArray[pointOffset + 1] = vertex.y;
-        this.verticesArray[pointOffset + 2] = vertex.z;
+        this.verticesArray[pointOffset] = vertex[0];
+        this.verticesArray[pointOffset + 1] = vertex[1];
+        this.verticesArray[pointOffset + 2] = vertex[2];
         return this.vertexCounter;
     };
-    TrianglesBuilder.prototype.addNormal = function (normal) {
+    TrianglesBuilder.prototype.addNormal = function (n) {
         this.normalCounter++;
+        var normal = !Array.isArray(n) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(n) : n;
         var normalOffset = this.normalCounter * 3;
-        this.verticesArray[normalOffset] = normal.x;
-        this.verticesArray[normalOffset + 1] = normal.y;
-        this.verticesArray[normalOffset + 2] = normal.z;
+        this.normalsArray[normalOffset] = normal[0];
+        this.normalsArray[normalOffset + 1] = normal[1];
+        this.normalsArray[normalOffset + 2] = normal[2];
         return this.normalCounter;
     };
     TrianglesBuilder.prototype.addTriangle = function (vertex1, vertex2, vertex3) {
