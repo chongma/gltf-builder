@@ -125,10 +125,12 @@ export class GltfBuilder {
         const buffer = this.createBuffer(pc_buffer)
         const bufferView = this.createBufferView(buffer, pc_buffer, BufferViewTarget.ARRAY_BUFFER)
         const accessor = this.createAccessorVec3(bufferView, count, extent)
+        const material = this.createMaterial()
         const mesh = this.addMesh({
             primitives: [{
                 attributes: { POSITION: accessor },
                 // indices: 0
+                material,
                 mode: 0
             }]
         })
