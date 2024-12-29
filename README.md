@@ -55,3 +55,5 @@ const gltfBuilder = new GltfBuilder()
 const gltf = gltfBuilder.build()
 fs.writeFileSync(path, JSON.stringify(gltf));
 ```
+
+Gltf files can be viewed with https://gltf-viewer.donmccurdy.com/
