@@ -2,28 +2,26 @@ import { checkExtents } from '../commands/checkExtents'
 import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, LineType, Lines, Point, PointObject } from '../types/gltf'
+import { BaseColourFactor, Extent, LineType, Lines, Point, PointObject } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class LinesBuilder {
-    verticesCount: number
-    indexesCount: number
     verticesArray: Float32Array
     indexesArray: Uint16Array
     extent: Extent
-    scale: number
-    mode: LineType
     indexCounter: number = -1
     vertexCounter: number = -1
 
-    constructor(verticesCount: number, indexesCount: number, scale: number = 1, mode: LineType) {
-        this.verticesCount = verticesCount
-        this.indexesCount = indexesCount
+    constructor(
+        private verticesCount: number, 
+        private indexesCount: number, 
+        private scale: number = 1, 
+        private mode: LineType,
+        private baseColorFactor?: BaseColourFactor
+    ) {
         this.verticesArray = new Float32Array(verticesCount * 3)
         this.indexesArray = new Uint16Array(indexesCount)
         this.extent = initialiseExtent()
-        this.scale = scale
-        this.mode = mode
     }
 
     addIndex(index: number): number {
@@ -65,6 +63,6 @@ export class LinesBuilder {
     }
 
     buildGltf(gltfBuilder: GltfBuilder): void {
-        gltfBuilder.createGltfLines(this.build(), this.mode)
+        gltfBuilder.createGltfLines(this.build(), this.mode, this.baseColorFactor)
     }
 }

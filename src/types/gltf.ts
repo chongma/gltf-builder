@@ -11,6 +11,8 @@ export const scale = 10000
 
 // export type Point = FixedLengthArray<number, 3>
 
+export type BaseColourFactor = [number, number, number, number]
+
 export type Point = [number, number, number]
 
 export interface PointObject {
