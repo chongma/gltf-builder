@@ -1,4 +1,6 @@
+import { createRandomBaseColorFactor } from '../commands/createRandomBaseColorFactor';
 import {
+    BaseColourFactor,
     BufferViewTarget,
     Extent,
     Gltf,
@@ -52,11 +54,11 @@ export class GltfBuilder {
         return this.bufferViews.length - 1
     }
 
-    createMaterial(): number {
+    createMaterial(baseColorFactor: BaseColourFactor): number {
         const material: GltfMaterial = {
             name: 'some_material',
             pbrMetallicRoughness: {
-                baseColorFactor: [Math.random(), Math.random(), Math.random(), Math.random()],
+                baseColorFactor,
                 // metallicFactor: Math.random(),
                 // roughnessFactor: Math.random()
             }
@@ -120,12 +122,13 @@ export class GltfBuilder {
         this.sceneNodes.push(i)
     }
 
-    createGltfPoints(pointCloud: PointCloud): void {
+    createGltfPoints(pointCloud: PointCloud, bcf?: BaseColourFactor): void {
         const { verticesCount: count, extent, vertices: pc_buffer } = pointCloud
         const buffer = this.createBuffer(pc_buffer)
         const bufferView = this.createBufferView(buffer, pc_buffer, BufferViewTarget.ARRAY_BUFFER)
         const accessor = this.createAccessorVec3(bufferView, count, extent)
-        const material = this.createMaterial()
+        const baseColorFactor = bcf || createRandomBaseColorFactor()
+        const material = this.createMaterial(baseColorFactor)
         const mesh = this.addMesh({
             primitives: [{
                 attributes: { POSITION: accessor },
@@ -138,7 +141,7 @@ export class GltfBuilder {
         this.addSceneNode(node)
     }
 
-    createGltfLines(lines: Lines, mode: LineType): void {
+    createGltfLines(lines: Lines, mode: LineType, bcf?: BaseColourFactor): void {
         const { vertices, verticesCount, indexes, indexesCount, extent } = lines
         const bufferVertices = this.createBuffer(vertices)
         const bufferIndexes = this.createBuffer(indexes)
@@ -146,7 +149,8 @@ export class GltfBuilder {
         const bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, BufferViewTarget.ELEMENT_ARRAY_BUFFER)
         const accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent)
         const accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount)
-        const material = this.createMaterial()
+        const baseColorFactor = bcf || createRandomBaseColorFactor()
+        const material = this.createMaterial(baseColorFactor)
         const mesh = this.addMesh({
             primitives: [{
                 attributes: { POSITION: accessorVertices },
@@ -159,7 +163,7 @@ export class GltfBuilder {
         this.addSceneNode(node)
     }
 
-    createGltfTriangles(triangles: Triangles, mode: TriangleType): void {
+    createGltfTriangles(triangles: Triangles, mode: TriangleType, bcf?: BaseColourFactor): void {
         const { vertices, verticesCount, indexes, indexesCount, normals, normalsCount, extent } = triangles
         const bufferVertices = this.createBuffer(vertices)
         const bufferIndexes = this.createBuffer(indexes)
@@ -170,7 +174,8 @@ export class GltfBuilder {
         const accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent)
         const accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount)
         const accessorNormals = this.createAccessorVec3(bufferViewNormals, normalsCount, extent)
-        const material = this.createMaterial()
+        const baseColorFactor = bcf || createRandomBaseColorFactor()
+        const material = this.createMaterial(baseColorFactor)
         const mesh = this.addMesh({
             primitives: [{
                 attributes: { POSITION: accessorVertices, NORMAL: accessorNormals },

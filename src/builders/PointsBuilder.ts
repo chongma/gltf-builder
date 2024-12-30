@@ -2,17 +2,19 @@ import { checkExtents } from '../commands/checkExtents'
 import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, Point, PointCloud, PointObject } from '../types/gltf'
+import { BaseColourFactor, Extent, Point, PointCloud, PointObject } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class PointsBuilder {
-    verticesCount: number
     verticesArray: Float32Array
     extent: Extent
-    scale: number
     vertexCounter: number = -1
 
-    constructor(verticesCount: number, scale: number = 1) {
+    constructor(
+        private verticesCount: number, 
+        private scale: number = 1, 
+        private baseColorFactor?: BaseColourFactor
+    ) {
         this.verticesCount = verticesCount
         this.verticesArray = new Float32Array(verticesCount * 3)
         this.extent = initialiseExtent()
@@ -46,6 +48,6 @@ export class PointsBuilder {
     }
 
     buildGltf(gltfBuilder: GltfBuilder): void {
-        gltfBuilder.createGltfPoints(this.build())
+        gltfBuilder.createGltfPoints(this.build(), this.baseColorFactor)
     }
 }

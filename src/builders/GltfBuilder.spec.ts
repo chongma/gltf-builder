@@ -1,8 +1,11 @@
+import { createRandomBaseColorFactor } from '../commands/createRandomBaseColorFactor'
 import { LineType, Point, TriangleType } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 import { LinesBuilder } from './LinesBuilder'
 import { PointsBuilder } from './PointsBuilder'
 import { TrianglesBuilder } from './TrianglesBuilder'
+
+const baseColorFactor = createRandomBaseColorFactor()
 
 describe('Gltf builder', () => {
     const vertices = [
@@ -24,13 +27,14 @@ describe('Gltf builder', () => {
         const gltfBuilder = new GltfBuilder()
         const verticesCount = vertices.length
         const indexesCount = vertices.length
-        const lineBuilder = new LinesBuilder(verticesCount, indexesCount, scale, LineType.LINE_STRIP)
+        const lineBuilder = new LinesBuilder(verticesCount, indexesCount, undefined, LineType.LINE_STRIP, baseColorFactor)
         vertices.forEach(vertex => {
             const index = lineBuilder.addVertex(vertex)
             lineBuilder.addIndex(index)
         })
         lineBuilder.buildGltf(gltfBuilder)
         const gltf = gltfBuilder.build()
+        expect(gltf.materials[0].pbrMetallicRoughness.baseColorFactor).toBe(baseColorFactor)
         console.log(JSON.stringify(gltf))
     })
     it('Draw some triangles', () => {

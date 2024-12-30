@@ -2,33 +2,30 @@ import { checkExtents } from '../commands/checkExtents'
 import { convertPointObjectToPoint } from '../commands/convertPointObjectToPoint'
 import { initialiseExtent } from '../commands/initialiseExtent'
 import { scalePoint } from '../commands/scalePoint'
-import { Extent, Point, PointObject, TriangleType, Triangles } from '../types/gltf'
+import { BaseColourFactor, Extent, Point, PointObject, TriangleType, Triangles } from '../types/gltf'
 import { GltfBuilder } from './GltfBuilder'
 
 export class TrianglesBuilder {
-    verticesCount: number
-    indexesCount: number
-    normalsCount: number
     verticesArray: Float32Array
     indexesArray: Uint16Array
     normalsArray: Float32Array
     extent: Extent
-    scale: number
-    mode: TriangleType
     vertexCounter: number = -1
     indexCounter: number = -1
     normalCounter: number = -1
 
-    constructor(verticesCount: number, indexesCount: number, normalsCount: number, scale: number = 1, mode: TriangleType) {
-        this.verticesCount = verticesCount
-        this.indexesCount = indexesCount
-        this.normalsCount = normalsCount
+    constructor(
+        private verticesCount: number, 
+        private indexesCount: number, 
+        private normalsCount: number, 
+        private scale: number = 1, 
+        private mode: TriangleType, 
+        private baseColorFactor?: BaseColourFactor
+    ) {
         this.verticesArray = new Float32Array(verticesCount * 3)
         this.indexesArray = new Uint16Array(indexesCount)
         this.normalsArray = new Float32Array(normalsCount * 3)
         this.extent = initialiseExtent()
-        this.scale = scale
-        this.mode = mode
     }
 
     addIndex(index: number): number {
@@ -85,6 +82,6 @@ export class TrianglesBuilder {
     }
 
     buildGltf(gltfBuilder: GltfBuilder): void {
-        gltfBuilder.createGltfTriangles(this.build(), this.mode)
+        gltfBuilder.createGltfTriangles(this.build(), this.mode, this.baseColorFactor)
     }
 }
