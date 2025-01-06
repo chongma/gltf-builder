@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var createRandomBaseColorFactor_1 = require("../commands/createRandomBaseColorFactor");
 var gltf_1 = require("../types/gltf");
 var GltfBuilder_1 = require("./GltfBuilder");
 var LinesBuilder_1 = require("./LinesBuilder");
 var PointsBuilder_1 = require("./PointsBuilder");
 var TrianglesBuilder_1 = require("./TrianglesBuilder");
+var baseColorFactor = (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
 describe('Gltf builder', function () {
     var vertices = [
         { x: 1, y: 2, z: 3 },
@@ -25,13 +27,14 @@ describe('Gltf builder', function () {
         var gltfBuilder = new GltfBuilder_1.GltfBuilder();
         var verticesCount = vertices.length;
         var indexesCount = vertices.length;
-        var lineBuilder = new LinesBuilder_1.LinesBuilder(verticesCount, indexesCount, scale, gltf_1.LineType.LINE_STRIP);
+        var lineBuilder = new LinesBuilder_1.LinesBuilder(verticesCount, indexesCount, undefined, gltf_1.LineType.LINE_STRIP, baseColorFactor);
         vertices.forEach(function (vertex) {
             var index = lineBuilder.addVertex(vertex);
             lineBuilder.addIndex(index);
         });
         lineBuilder.buildGltf(gltfBuilder);
         var gltf = gltfBuilder.build();
+        expect(gltf.materials[0].pbrMetallicRoughness.baseColorFactor).toBe(baseColorFactor);
         console.log(JSON.stringify(gltf));
     });
     it('Draw some triangles', function () {

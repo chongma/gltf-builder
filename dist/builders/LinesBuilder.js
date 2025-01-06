@@ -6,17 +6,18 @@ var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var LinesBuilder = /** @class */ (function () {
-    function LinesBuilder(verticesCount, indexesCount, scale, mode) {
+    function LinesBuilder(verticesCount, indexesCount, scale, mode, baseColorFactor) {
         if (scale === void 0) { scale = 1; }
-        this.indexCounter = -1;
-        this.vertexCounter = -1;
         this.verticesCount = verticesCount;
         this.indexesCount = indexesCount;
+        this.scale = scale;
+        this.mode = mode;
+        this.baseColorFactor = baseColorFactor;
+        this.indexCounter = -1;
+        this.vertexCounter = -1;
         this.verticesArray = new Float32Array(verticesCount * 3);
         this.indexesArray = new Uint16Array(indexesCount);
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
-        this.scale = scale;
-        this.mode = mode;
     }
     LinesBuilder.prototype.addIndex = function (index) {
         this.indexCounter++;
@@ -53,7 +54,7 @@ var LinesBuilder = /** @class */ (function () {
         };
     };
     LinesBuilder.prototype.buildGltf = function (gltfBuilder) {
-        gltfBuilder.createGltfLines(this.build(), this.mode);
+        gltfBuilder.createGltfLines(this.build(), this.mode, this.baseColorFactor);
     };
     return LinesBuilder;
 }());

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GltfBuilder = void 0;
+var createRandomBaseColorFactor_1 = require("../commands/createRandomBaseColorFactor");
 var gltf_1 = require("../types/gltf");
 var GltfBuilder = /** @class */ (function () {
     function GltfBuilder() {
@@ -36,11 +37,11 @@ var GltfBuilder = /** @class */ (function () {
         this.bufferViews.push(bufferView);
         return this.bufferViews.length - 1;
     };
-    GltfBuilder.prototype.createMaterial = function () {
+    GltfBuilder.prototype.createMaterial = function (baseColorFactor) {
         var material = {
             name: 'some_material',
             pbrMetallicRoughness: {
-                baseColorFactor: [Math.random(), Math.random(), Math.random(), Math.random()],
+                baseColorFactor: baseColorFactor,
                 // metallicFactor: Math.random(),
                 // roughnessFactor: Math.random()
             }
@@ -96,12 +97,13 @@ var GltfBuilder = /** @class */ (function () {
     GltfBuilder.prototype.addSceneNode = function (i) {
         this.sceneNodes.push(i);
     };
-    GltfBuilder.prototype.createGltfPoints = function (pointCloud) {
+    GltfBuilder.prototype.createGltfPoints = function (pointCloud, bcf) {
         var count = pointCloud.verticesCount, extent = pointCloud.extent, pc_buffer = pointCloud.vertices;
         var buffer = this.createBuffer(pc_buffer);
         var bufferView = this.createBufferView(buffer, pc_buffer, gltf_1.BufferViewTarget.ARRAY_BUFFER);
         var accessor = this.createAccessorVec3(bufferView, count, extent);
-        var material = this.createMaterial();
+        var baseColorFactor = bcf || (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
+        var material = this.createMaterial(baseColorFactor);
         var mesh = this.addMesh({
             primitives: [{
                     attributes: { POSITION: accessor },
@@ -113,7 +115,7 @@ var GltfBuilder = /** @class */ (function () {
         var node = this.addNode({ mesh: mesh });
         this.addSceneNode(node);
     };
-    GltfBuilder.prototype.createGltfLines = function (lines, mode) {
+    GltfBuilder.prototype.createGltfLines = function (lines, mode, bcf) {
         var vertices = lines.vertices, verticesCount = lines.verticesCount, indexes = lines.indexes, indexesCount = lines.indexesCount, extent = lines.extent;
         var bufferVertices = this.createBuffer(vertices);
         var bufferIndexes = this.createBuffer(indexes);
@@ -121,7 +123,8 @@ var GltfBuilder = /** @class */ (function () {
         var bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, gltf_1.BufferViewTarget.ELEMENT_ARRAY_BUFFER);
         var accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent);
         var accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount);
-        var material = this.createMaterial();
+        var baseColorFactor = bcf || (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
+        var material = this.createMaterial(baseColorFactor);
         var mesh = this.addMesh({
             primitives: [{
                     attributes: { POSITION: accessorVertices },
@@ -133,7 +136,7 @@ var GltfBuilder = /** @class */ (function () {
         var node = this.addNode({ mesh: mesh });
         this.addSceneNode(node);
     };
-    GltfBuilder.prototype.createGltfTriangles = function (triangles, mode) {
+    GltfBuilder.prototype.createGltfTriangles = function (triangles, mode, bcf) {
         var vertices = triangles.vertices, verticesCount = triangles.verticesCount, indexes = triangles.indexes, indexesCount = triangles.indexesCount, normals = triangles.normals, normalsCount = triangles.normalsCount, extent = triangles.extent;
         var bufferVertices = this.createBuffer(vertices);
         var bufferIndexes = this.createBuffer(indexes);
@@ -144,7 +147,8 @@ var GltfBuilder = /** @class */ (function () {
         var accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent);
         var accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount);
         var accessorNormals = this.createAccessorVec3(bufferViewNormals, normalsCount, extent);
-        var material = this.createMaterial();
+        var baseColorFactor = bcf || (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
+        var material = this.createMaterial(baseColorFactor);
         var mesh = this.addMesh({
             primitives: [{
                     attributes: { POSITION: accessorVertices, NORMAL: accessorNormals },

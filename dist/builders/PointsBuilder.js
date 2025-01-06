@@ -6,8 +6,11 @@ var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var PointsBuilder = /** @class */ (function () {
-    function PointsBuilder(verticesCount, scale) {
+    function PointsBuilder(verticesCount, scale, baseColorFactor) {
         if (scale === void 0) { scale = 1; }
+        this.verticesCount = verticesCount;
+        this.scale = scale;
+        this.baseColorFactor = baseColorFactor;
         this.vertexCounter = -1;
         this.verticesCount = verticesCount;
         this.verticesArray = new Float32Array(verticesCount * 3);
@@ -39,7 +42,7 @@ var PointsBuilder = /** @class */ (function () {
         };
     };
     PointsBuilder.prototype.buildGltf = function (gltfBuilder) {
-        gltfBuilder.createGltfPoints(this.build());
+        gltfBuilder.createGltfPoints(this.build(), this.baseColorFactor);
     };
     return PointsBuilder;
 }());

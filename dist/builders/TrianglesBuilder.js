@@ -6,20 +6,21 @@ var convertPointObjectToPoint_1 = require("../commands/convertPointObjectToPoint
 var initialiseExtent_1 = require("../commands/initialiseExtent");
 var scalePoint_1 = require("../commands/scalePoint");
 var TrianglesBuilder = /** @class */ (function () {
-    function TrianglesBuilder(verticesCount, indexesCount, normalsCount, scale, mode) {
+    function TrianglesBuilder(verticesCount, indexesCount, normalsCount, scale, mode, baseColorFactor) {
         if (scale === void 0) { scale = 1; }
-        this.vertexCounter = -1;
-        this.indexCounter = -1;
-        this.normalCounter = -1;
         this.verticesCount = verticesCount;
         this.indexesCount = indexesCount;
         this.normalsCount = normalsCount;
+        this.scale = scale;
+        this.mode = mode;
+        this.baseColorFactor = baseColorFactor;
+        this.vertexCounter = -1;
+        this.indexCounter = -1;
+        this.normalCounter = -1;
         this.verticesArray = new Float32Array(verticesCount * 3);
         this.indexesArray = new Uint16Array(indexesCount);
         this.normalsArray = new Float32Array(normalsCount * 3);
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
-        this.scale = scale;
-        this.mode = mode;
     }
     TrianglesBuilder.prototype.addIndex = function (index) {
         this.indexCounter++;
@@ -70,7 +71,7 @@ var TrianglesBuilder = /** @class */ (function () {
         };
     };
     TrianglesBuilder.prototype.buildGltf = function (gltfBuilder) {
-        gltfBuilder.createGltfTriangles(this.build(), this.mode);
+        gltfBuilder.createGltfTriangles(this.build(), this.mode, this.baseColorFactor);
     };
     return TrianglesBuilder;
 }());

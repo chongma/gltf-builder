@@ -2,7 +2,7 @@ import { GltfBuilder } from './builders/GltfBuilder'
 import { LinesBuilder } from './builders/LinesBuilder'
 import { PointsBuilder } from './builders/PointsBuilder'
 import { TrianglesBuilder } from './builders/TrianglesBuilder'
-import { Point, PointObject, Gltf, LineType, TriangleType } from './types/gltf'
+import { BaseColourFactor, Point, PointObject, Gltf, LineType, TriangleType } from './types/gltf'
 import { createRandomBaseColorFactor } from './commands/createRandomBaseColorFactor'
 
 export {
@@ -10,6 +10,7 @@ export {
     LinesBuilder,
     PointsBuilder,
     TrianglesBuilder,
+    BaseColourFactor,
     Point,
     PointObject,
     Gltf,

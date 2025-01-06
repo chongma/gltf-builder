@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TriangleType = exports.LineType = exports.TrianglesBuilder = exports.PointsBuilder = exports.LinesBuilder = exports.GltfBuilder = void 0;
+exports.createRandomBaseColorFactor = exports.TriangleType = exports.LineType = exports.TrianglesBuilder = exports.PointsBuilder = exports.LinesBuilder = exports.GltfBuilder = void 0;
 var GltfBuilder_1 = require("./builders/GltfBuilder");
 Object.defineProperty(exports, "GltfBuilder", { enumerable: true, get: function () { return GltfBuilder_1.GltfBuilder; } });
 var LinesBuilder_1 = require("./builders/LinesBuilder");
@@ -12,3 +12,5 @@ Object.defineProperty(exports, "TrianglesBuilder", { enumerable: true, get: func
 var gltf_1 = require("./types/gltf");
 Object.defineProperty(exports, "LineType", { enumerable: true, get: function () { return gltf_1.LineType; } });
 Object.defineProperty(exports, "TriangleType", { enumerable: true, get: function () { return gltf_1.TriangleType; } });
+var createRandomBaseColorFactor_1 = require("./commands/createRandomBaseColorFactor");
+Object.defineProperty(exports, "createRandomBaseColorFactor", { enumerable: true, get: function () { return createRandomBaseColorFactor_1.createRandomBaseColorFactor; } });

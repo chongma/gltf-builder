@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { BufferViewTarget, Extent, Gltf, GltfAccessor, GltfBuffer, GltfBufferView, GltfMaterial, GltfMesh, GltfNode, LineType, Lines, PointCloud, TriangleType, Triangles } from '../types/gltf';
+import { BaseColourFactor, BufferViewTarget, Extent, Gltf, GltfAccessor, GltfBuffer, GltfBufferView, GltfMaterial, GltfMesh, GltfNode, LineType, Lines, PointCloud, TriangleType, Triangles } from '../types/gltf';
 export declare class GltfBuilder {
     buffers: Array<GltfBuffer>;
     bufferViews: Array<GltfBufferView>;
@@ -12,7 +12,7 @@ export declare class GltfBuilder {
     addBuffer(buffer: GltfBuffer): number;
     createBufferView(bufferId: number, buffer: Buffer, target: BufferViewTarget): number;
     addBufferView(bufferView: GltfBufferView): number;
-    createMaterial(): number;
+    createMaterial(baseColorFactor: BaseColourFactor): number;
     addMaterial(material: GltfMaterial): number;
     createAccessorVec3(bufferView: number, count: number, extent: Extent): number;
     createAccessorScalar(bufferView: number, count: number): number;
@@ -20,8 +20,8 @@ export declare class GltfBuilder {
     addMesh(mesh: GltfMesh): number;
     addNode(node: GltfNode): number;
     addSceneNode(i: number): void;
-    createGltfPoints(pointCloud: PointCloud): void;
-    createGltfLines(lines: Lines, mode: LineType): void;
-    createGltfTriangles(triangles: Triangles, mode: TriangleType): void;
+    createGltfPoints(pointCloud: PointCloud, bcf?: BaseColourFactor): void;
+    createGltfLines(lines: Lines, mode: LineType, bcf?: BaseColourFactor): void;
+    createGltfTriangles(triangles: Triangles, mode: TriangleType, bcf?: BaseColourFactor): void;
     build(): Gltf;
 }

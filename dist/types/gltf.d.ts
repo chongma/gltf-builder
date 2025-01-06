@@ -1,5 +1,6 @@
 /// <reference types="node" />
 export declare const scale = 10000;
+export type BaseColourFactor = [number, number, number, number];
 export type Point = [number, number, number];
 export interface PointObject {
     x: number;
