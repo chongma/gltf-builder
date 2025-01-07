@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 1. Check for @gmail.com email address
+COMMITTER_EMAIL=$(git config user.email)
+
+if [[ "$COMMITTER_EMAIL" != *@gmail.com ]]; then
+  echo "❌ Commit aborted: Your email ($COMMITTER_EMAIL) must end with @gmail.com."
+  exit 1
+fi
+
+# 2. Run the build process
+npm run build
+
+# 3. Check if the build process caused any changes
+if [ -n "$(git status --porcelain)" ]; then
+  echo "❌ Commit aborted: Build caused changes. Please stage the changes and try again."
+  exit 1
+fi
+
+# If everything is fine, allow the commit
