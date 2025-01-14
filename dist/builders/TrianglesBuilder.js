@@ -33,18 +33,20 @@ var TrianglesBuilder = /** @class */ (function () {
         var pointOffset = this.vertexCounter * 3;
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
-        this.verticesArray[pointOffset] = vertex[0];
-        this.verticesArray[pointOffset + 1] = vertex[1];
-        this.verticesArray[pointOffset + 2] = vertex[2];
+        var x = vertex[0], y = vertex[1], z = vertex[2];
+        this.verticesArray[pointOffset] = x;
+        this.verticesArray[pointOffset + 1] = y;
+        this.verticesArray[pointOffset + 2] = z;
         return this.vertexCounter;
     };
     TrianglesBuilder.prototype.addNormal = function (n) {
         this.normalCounter++;
         var normal = !Array.isArray(n) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(n) : n;
         var normalOffset = this.normalCounter * 3;
-        this.normalsArray[normalOffset] = normal[0];
-        this.normalsArray[normalOffset + 1] = normal[1];
-        this.normalsArray[normalOffset + 2] = normal[2];
+        var x = normal[0], y = normal[1], z = normal[2];
+        this.normalsArray[normalOffset] = x;
+        this.normalsArray[normalOffset + 1] = y;
+        this.normalsArray[normalOffset + 2] = z;
         return this.normalCounter;
     };
     TrianglesBuilder.prototype.addTriangle = function (vertex1, vertex2, vertex3) {

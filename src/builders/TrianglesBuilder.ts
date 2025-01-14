@@ -15,11 +15,11 @@ export class TrianglesBuilder {
     normalCounter: number = -1
 
     constructor(
-        private verticesCount: number, 
-        private indexesCount: number, 
-        private normalsCount: number, 
-        private scale: number = 1, 
-        private mode: TriangleType, 
+        private verticesCount: number,
+        private indexesCount: number,
+        private normalsCount: number,
+        private scale: number = 1,
+        private mode: TriangleType,
         private baseColorFactor?: BaseColourFactor
     ) {
         this.verticesArray = new Float32Array(verticesCount * 3)
@@ -40,9 +40,10 @@ export class TrianglesBuilder {
         const pointOffset = this.vertexCounter * 3
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
-        this.verticesArray[pointOffset] = vertex[0]
-        this.verticesArray[pointOffset + 1] = vertex[1]
-        this.verticesArray[pointOffset + 2] = vertex[2]
+        const [x, y, z] = vertex
+        this.verticesArray[pointOffset] = x
+        this.verticesArray[pointOffset + 1] = y
+        this.verticesArray[pointOffset + 2] = z
         return this.vertexCounter
     }
 
@@ -50,9 +51,10 @@ export class TrianglesBuilder {
         this.normalCounter++
         let normal = !Array.isArray(n) ? convertPointObjectToPoint(n) : n
         const normalOffset = this.normalCounter * 3
-        this.normalsArray[normalOffset] = normal[0]
-        this.normalsArray[normalOffset + 1] = normal[1]
-        this.normalsArray[normalOffset + 2] = normal[2]
+        const [x, y, z] = normal
+        this.normalsArray[normalOffset] = x
+        this.normalsArray[normalOffset + 1] = y
+        this.normalsArray[normalOffset + 2] = z
         return this.normalCounter
     }
 

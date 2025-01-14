@@ -30,9 +30,10 @@ var LinesBuilder = /** @class */ (function () {
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var pointOffset = this.vertexCounter * 3;
-        this.verticesArray[pointOffset] = vertex[0];
-        this.verticesArray[pointOffset + 1] = vertex[1];
-        this.verticesArray[pointOffset + 2] = vertex[2];
+        var x = vertex[0], y = vertex[1], z = vertex[2];
+        this.verticesArray[pointOffset] = x;
+        this.verticesArray[pointOffset + 1] = y;
+        this.verticesArray[pointOffset + 2] = z;
         return this.vertexCounter;
     };
     LinesBuilder.prototype.addLine = function (vertex1, vertex2) {

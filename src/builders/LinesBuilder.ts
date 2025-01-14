@@ -13,9 +13,9 @@ export class LinesBuilder {
     vertexCounter: number = -1
 
     constructor(
-        private verticesCount: number, 
-        private indexesCount: number, 
-        private scale: number = 1, 
+        private verticesCount: number,
+        private indexesCount: number,
+        private scale: number = 1,
         private mode: LineType,
         private baseColorFactor?: BaseColourFactor
     ) {
@@ -36,9 +36,10 @@ export class LinesBuilder {
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
         const pointOffset = this.vertexCounter * 3
-        this.verticesArray[pointOffset] = vertex[0]
-        this.verticesArray[pointOffset + 1] = vertex[1]
-        this.verticesArray[pointOffset + 2] = vertex[2]
+        const [x, y, z] = vertex
+        this.verticesArray[pointOffset] = x
+        this.verticesArray[pointOffset + 1] = y
+        this.verticesArray[pointOffset + 2] = z
         return this.vertexCounter
     }
 
