@@ -47,6 +47,17 @@ const gltf = gltfBuilder.build()
 console.log(JSON.stringify(gltf))
 ```
 
+## Writing text
+Use a text builder to build the text structure.  Then build it using the GltfBuilder
+```js
+const gltfBuilder = new GltfBuilder()
+const textBuilder = new TextBuilder(scale)
+textBuilder.addText([0, 0, 0], [1, 0, 0], 'Hello world!', 10, 8)
+textBuilder.buildGltf(gltfBuilder)
+const gltf = gltfBuilder.build()
+console.log(JSON.stringify(gltf))
+```
+
 ## Writing Gltf to file
 The Gltf can be written to file by stringifying the JSON object
 ```js
