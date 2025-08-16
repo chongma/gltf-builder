@@ -1,5 +1,4 @@
-/// <reference types="node" />
-import { BaseColourFactor, BufferViewTarget, Extent, Gltf, GltfAccessor, GltfBuffer, GltfBufferView, GltfMaterial, GltfMesh, GltfNode, LineType, Lines, PointCloud, TriangleType, Triangles } from '../types/gltf';
+import { Base64Type, BaseColourFactor, BufferViewTarget, Extent, Gltf, GltfAccessor, GltfBuffer, GltfBufferView, GltfMaterial, GltfMesh, GltfNode, LineType, Lines, Point, PointCloud, TriangleType, Triangles } from '../types/gltf';
 export declare class GltfBuilder {
     buffers: Array<GltfBuffer>;
     bufferViews: Array<GltfBufferView>;
@@ -8,9 +7,10 @@ export declare class GltfBuilder {
     nodes: Array<GltfNode>;
     materials: Array<GltfMaterial>;
     sceneNodes: Array<number>;
-    createBuffer(bufferRaw: Buffer): number;
+    typedArrayToBase64(array: Uint8Array | Uint16Array | Float32Array): Base64Type;
+    createBuffer({ base64String, byteLength }: Base64Type): number;
     addBuffer(buffer: GltfBuffer): number;
-    createBufferView(bufferId: number, buffer: Buffer, target: BufferViewTarget): number;
+    createBufferView(bufferId: number, { byteLength }: Base64Type, target: BufferViewTarget): number;
     addBufferView(bufferView: GltfBufferView): number;
     createMaterial(baseColorFactor: BaseColourFactor): number;
     addMaterial(material: GltfMaterial): number;
@@ -23,5 +23,6 @@ export declare class GltfBuilder {
     createGltfPoints(pointCloud: PointCloud, bcf?: BaseColourFactor): void;
     createGltfLines(lines: Lines, mode: LineType, bcf?: BaseColourFactor): void;
     createGltfTriangles(triangles: Triangles, mode: TriangleType, bcf?: BaseColourFactor): void;
+    createGltfTexts(pointsArrayArray: Point[][][], scale: number, bcf?: BaseColourFactor): void;
     build(): Gltf;
 }

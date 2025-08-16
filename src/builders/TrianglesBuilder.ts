@@ -6,9 +6,9 @@ import { BaseColourFactor, Extent, Point, PointObject, TriangleType, Triangles }
 import { GltfBuilder } from './GltfBuilder'
 
 export class TrianglesBuilder {
-    verticesArray: Float32Array
-    indexesArray: Uint16Array
-    normalsArray: Float32Array
+    vertices: Float32Array
+    indexes: Uint16Array
+    normals: Float32Array
     extent: Extent
     vertexCounter: number = -1
     indexCounter: number = -1
@@ -22,15 +22,15 @@ export class TrianglesBuilder {
         private mode: TriangleType,
         private baseColorFactor?: BaseColourFactor
     ) {
-        this.verticesArray = new Float32Array(verticesCount * 3)
-        this.indexesArray = new Uint16Array(indexesCount)
-        this.normalsArray = new Float32Array(normalsCount * 3)
+        this.vertices = new Float32Array(verticesCount * 3)
+        this.indexes = new Uint16Array(indexesCount)
+        this.normals = new Float32Array(normalsCount * 3)
         this.extent = initialiseExtent()
     }
 
     addIndex(index: number): number {
         this.indexCounter++
-        this.indexesArray[this.indexCounter] = index
+        this.indexes[this.indexCounter] = index
         return this.indexCounter
     }
 
@@ -41,9 +41,9 @@ export class TrianglesBuilder {
         vertex = scalePoint(vertex, this.scale);
         checkExtents(vertex, this.extent)
         const [x, y, z] = vertex
-        this.verticesArray[pointOffset] = x
-        this.verticesArray[pointOffset + 1] = y
-        this.verticesArray[pointOffset + 2] = z
+        this.vertices[pointOffset] = x
+        this.vertices[pointOffset + 1] = y
+        this.vertices[pointOffset + 2] = z
         return this.vertexCounter
     }
 
@@ -52,9 +52,9 @@ export class TrianglesBuilder {
         let normal = !Array.isArray(n) ? convertPointObjectToPoint(n) : n
         const normalOffset = this.normalCounter * 3
         const [x, y, z] = normal
-        this.normalsArray[normalOffset] = x
-        this.normalsArray[normalOffset + 1] = y
-        this.normalsArray[normalOffset + 2] = z
+        this.normals[normalOffset] = x
+        this.normals[normalOffset + 1] = y
+        this.normals[normalOffset + 2] = z
         return this.normalCounter
     }
 
@@ -68,10 +68,7 @@ export class TrianglesBuilder {
     }
 
     build(): Triangles {
-        const vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer))
-        const indexes = Buffer.from(new Uint8Array(this.indexesArray.buffer))
-        const normals = Buffer.from(new Uint8Array(this.normalsArray.buffer))
-        const { verticesCount, indexesCount, normalsCount, extent } = this
+        const { verticesCount, indexesCount, normalsCount, vertices, indexes, normals, extent } = this
         return {
             verticesCount,
             indexesCount,

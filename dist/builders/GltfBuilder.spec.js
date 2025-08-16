@@ -5,6 +5,7 @@ var gltf_1 = require("../types/gltf");
 var GltfBuilder_1 = require("./GltfBuilder");
 var LinesBuilder_1 = require("./LinesBuilder");
 var PointsBuilder_1 = require("./PointsBuilder");
+var TextBuilder_1 = require("./TextBuilder");
 var TrianglesBuilder_1 = require("./TrianglesBuilder");
 var baseColorFactor = (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
 describe('Gltf builder', function () {
@@ -70,6 +71,14 @@ describe('Gltf builder', function () {
         simple3DObject.normals.forEach(function (normal) { return trianglesBuilder.addNormal(normal); });
         simple3DObject.indices.forEach(function (index) { return trianglesBuilder.addIndex(index); });
         trianglesBuilder.buildGltf(gltfBuilder);
+        var gltf = gltfBuilder.build();
+        console.log(JSON.stringify(gltf));
+    });
+    it('Draw some text', function () {
+        var gltfBuilder = new GltfBuilder_1.GltfBuilder();
+        var textBuilder = new TextBuilder_1.TextBuilder(scale);
+        textBuilder.addText([0, 0, 0], [1, 0, 0], 'Hello world!', 10, 8);
+        textBuilder.buildGltf(gltfBuilder);
         var gltf = gltfBuilder.build();
         console.log(JSON.stringify(gltf));
     });

@@ -28,23 +28,23 @@ export interface Extent {
 }
 
 export interface PointCloud {
-    vertices: Buffer
+    vertices: Float32Array
     verticesCount: number
     extent: Extent
 }
 
 export interface Lines {
-    vertices: Buffer
-    indexes: Buffer
+    vertices: Float32Array
+    indexes: Uint16Array
     verticesCount: number
     indexesCount: number
     extent: Extent
 }
 
 export interface Triangles {
-    vertices: Buffer
-    indexes: Buffer
-    normals: Buffer
+    vertices: Float32Array
+    indexes: Uint16Array
+    normals: Float32Array
     verticesCount: number
     indexesCount: number
     normalsCount: number
@@ -125,6 +125,11 @@ export interface Gltf {
     accessors: Array<GltfAccessor>,
     materials: Array<GltfMaterial>,
     asset: GltfAsset
+}
+
+export type Base64Type = {
+    base64String: string
+    byteLength: number
 }
 
 export enum LineType {

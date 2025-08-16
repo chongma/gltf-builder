@@ -4,7 +4,7 @@ export declare class PointsBuilder {
     private verticesCount;
     private scale;
     private baseColorFactor?;
-    verticesArray: Float32Array;
+    vertices: Float32Array;
     extent: Extent;
     vertexCounter: number;
     constructor(verticesCount: number, scale?: number, baseColorFactor?: BaseColourFactor | undefined);

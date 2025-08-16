@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GltfBuilder = void 0;
 var createRandomBaseColorFactor_1 = require("../commands/createRandomBaseColorFactor");
 var gltf_1 = require("../types/gltf");
+var LinesBuilder_1 = require("./LinesBuilder");
 var GltfBuilder = /** @class */ (function () {
     function GltfBuilder() {
         this.buffers = [];
@@ -13,10 +14,24 @@ var GltfBuilder = /** @class */ (function () {
         this.materials = [];
         this.sceneNodes = [];
     }
-    GltfBuilder.prototype.createBuffer = function (bufferRaw) {
+    GltfBuilder.prototype.typedArrayToBase64 = function (array) {
+        var uint8Array = new Uint8Array(array.buffer);
+        var base64String;
+        if (typeof Buffer !== "undefined") {
+            base64String = Buffer.from(uint8Array).toString("base64");
+        }
+        else {
+            var binary_1 = "";
+            uint8Array.forEach(function (byte) { return (binary_1 += String.fromCharCode(byte)); });
+            base64String = btoa(binary_1);
+        }
+        return { base64String: base64String, byteLength: uint8Array.byteLength };
+    };
+    GltfBuilder.prototype.createBuffer = function (_a) {
+        var base64String = _a.base64String, byteLength = _a.byteLength;
         var buffer = {
-            uri: "data:application/octet-stream;base64,".concat(bufferRaw.toString('base64')),
-            byteLength: bufferRaw.byteLength
+            uri: "data:application/octet-stream;base64,".concat(base64String),
+            byteLength: byteLength
         };
         return this.addBuffer(buffer);
     };
@@ -24,11 +39,12 @@ var GltfBuilder = /** @class */ (function () {
         this.buffers.push(buffer);
         return this.buffers.length - 1;
     };
-    GltfBuilder.prototype.createBufferView = function (bufferId, buffer, target) {
+    GltfBuilder.prototype.createBufferView = function (bufferId, _a, target) {
+        var byteLength = _a.byteLength;
         var bufferView = {
             buffer: bufferId,
             byteOffset: 0,
-            byteLength: buffer.byteLength,
+            byteLength: byteLength,
             target: target
         };
         return this.addBufferView(bufferView);
@@ -98,9 +114,10 @@ var GltfBuilder = /** @class */ (function () {
         this.sceneNodes.push(i);
     };
     GltfBuilder.prototype.createGltfPoints = function (pointCloud, bcf) {
-        var count = pointCloud.verticesCount, extent = pointCloud.extent, pc_buffer = pointCloud.vertices;
-        var buffer = this.createBuffer(pc_buffer);
-        var bufferView = this.createBufferView(buffer, pc_buffer, gltf_1.BufferViewTarget.ARRAY_BUFFER);
+        var count = pointCloud.verticesCount, extent = pointCloud.extent, vertices = pointCloud.vertices;
+        var base64TypeVertices = this.typedArrayToBase64(vertices);
+        var buffer = this.createBuffer(base64TypeVertices);
+        var bufferView = this.createBufferView(buffer, base64TypeVertices, gltf_1.BufferViewTarget.ARRAY_BUFFER);
         var accessor = this.createAccessorVec3(bufferView, count, extent);
         var baseColorFactor = bcf || (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
         var material = this.createMaterial(baseColorFactor);
@@ -117,10 +134,12 @@ var GltfBuilder = /** @class */ (function () {
     };
     GltfBuilder.prototype.createGltfLines = function (lines, mode, bcf) {
         var vertices = lines.vertices, verticesCount = lines.verticesCount, indexes = lines.indexes, indexesCount = lines.indexesCount, extent = lines.extent;
-        var bufferVertices = this.createBuffer(vertices);
-        var bufferIndexes = this.createBuffer(indexes);
-        var bufferViewVertices = this.createBufferView(bufferVertices, vertices, gltf_1.BufferViewTarget.ARRAY_BUFFER);
-        var bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, gltf_1.BufferViewTarget.ELEMENT_ARRAY_BUFFER);
+        var base64TypeVertices = this.typedArrayToBase64(vertices);
+        var base64TypeIndexes = this.typedArrayToBase64(indexes);
+        var bufferVertices = this.createBuffer(base64TypeVertices);
+        var bufferIndexes = this.createBuffer(base64TypeIndexes);
+        var bufferViewVertices = this.createBufferView(bufferVertices, base64TypeVertices, gltf_1.BufferViewTarget.ARRAY_BUFFER);
+        var bufferViewIndexes = this.createBufferView(bufferIndexes, base64TypeIndexes, gltf_1.BufferViewTarget.ELEMENT_ARRAY_BUFFER);
         var accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent);
         var accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount);
         var baseColorFactor = bcf || (0, createRandomBaseColorFactor_1.createRandomBaseColorFactor)();
@@ -138,12 +157,15 @@ var GltfBuilder = /** @class */ (function () {
     };
     GltfBuilder.prototype.createGltfTriangles = function (triangles, mode, bcf) {
         var vertices = triangles.vertices, verticesCount = triangles.verticesCount, indexes = triangles.indexes, indexesCount = triangles.indexesCount, normals = triangles.normals, normalsCount = triangles.normalsCount, extent = triangles.extent;
-        var bufferVertices = this.createBuffer(vertices);
-        var bufferIndexes = this.createBuffer(indexes);
-        var bufferNormals = this.createBuffer(normals);
-        var bufferViewVertices = this.createBufferView(bufferVertices, vertices, gltf_1.BufferViewTarget.ARRAY_BUFFER);
-        var bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, gltf_1.BufferViewTarget.ELEMENT_ARRAY_BUFFER);
-        var bufferViewNormals = this.createBufferView(bufferNormals, normals, gltf_1.BufferViewTarget.ARRAY_BUFFER);
+        var base64TypeVertices = this.typedArrayToBase64(vertices);
+        var base64TypeIndexes = this.typedArrayToBase64(indexes);
+        var base64TypeNormals = this.typedArrayToBase64(normals);
+        var bufferVertices = this.createBuffer(base64TypeVertices);
+        var bufferIndexes = this.createBuffer(base64TypeIndexes);
+        var bufferNormals = this.createBuffer(base64TypeNormals);
+        var bufferViewVertices = this.createBufferView(bufferVertices, base64TypeVertices, gltf_1.BufferViewTarget.ARRAY_BUFFER);
+        var bufferViewIndexes = this.createBufferView(bufferIndexes, base64TypeIndexes, gltf_1.BufferViewTarget.ELEMENT_ARRAY_BUFFER);
+        var bufferViewNormals = this.createBufferView(bufferNormals, base64TypeNormals, gltf_1.BufferViewTarget.ARRAY_BUFFER);
         var accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent);
         var accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount);
         var accessorNormals = this.createAccessorVec3(bufferViewNormals, normalsCount, extent);
@@ -159,6 +181,19 @@ var GltfBuilder = /** @class */ (function () {
         });
         var node = this.addNode({ mesh: mesh });
         this.addSceneNode(node);
+    };
+    GltfBuilder.prototype.createGltfTexts = function (pointsArrayArray, scale, bcf) {
+        var _this = this;
+        pointsArrayArray.forEach(function (pointsArray) {
+            pointsArray.forEach(function (points) {
+                var lineBuilder = new LinesBuilder_1.LinesBuilder(points.length, points.length, scale, gltf_1.LineType.LINE_STRIP, bcf);
+                points.forEach(function (point) {
+                    var index = lineBuilder.addVertex(point);
+                    lineBuilder.addIndex(index);
+                });
+                lineBuilder.buildGltf(_this);
+            });
+        });
     };
     GltfBuilder.prototype.build = function () {
         return {

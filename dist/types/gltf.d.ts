@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare const scale = 10000;
 export type BaseColourFactor = [number, number, number, number];
 export type Point = [number, number, number];
@@ -13,21 +12,21 @@ export interface Extent {
     min: Point;
 }
 export interface PointCloud {
-    vertices: Buffer;
+    vertices: Float32Array;
     verticesCount: number;
     extent: Extent;
 }
 export interface Lines {
-    vertices: Buffer;
-    indexes: Buffer;
+    vertices: Float32Array;
+    indexes: Uint16Array;
     verticesCount: number;
     indexesCount: number;
     extent: Extent;
 }
 export interface Triangles {
-    vertices: Buffer;
-    indexes: Buffer;
-    normals: Buffer;
+    vertices: Float32Array;
+    indexes: Uint16Array;
+    normals: Float32Array;
     verticesCount: number;
     indexesCount: number;
     normalsCount: number;
@@ -99,6 +98,10 @@ export interface Gltf {
     materials: Array<GltfMaterial>;
     asset: GltfAsset;
 }
+export type Base64Type = {
+    base64String: string;
+    byteLength: number;
+};
 export declare enum LineType {
     LINES = 1,
     LINE_LOOP = 2,

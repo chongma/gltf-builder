@@ -6,8 +6,8 @@ export declare class LinesBuilder {
     private scale;
     private mode;
     private baseColorFactor?;
-    verticesArray: Float32Array;
-    indexesArray: Uint16Array;
+    vertices: Float32Array;
+    indexes: Uint16Array;
     extent: Extent;
     indexCounter: number;
     vertexCounter: number;

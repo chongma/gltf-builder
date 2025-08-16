@@ -1,5 +1,6 @@
 import { createRandomBaseColorFactor } from '../commands/createRandomBaseColorFactor';
 import {
+    Base64Type,
     BaseColourFactor,
     BufferViewTarget,
     Extent,
@@ -12,10 +13,12 @@ import {
     GltfNode,
     LineType,
     Lines,
+    Point,
     PointCloud,
     TriangleType,
     Triangles
 } from '../types/gltf';
+import { LinesBuilder } from './LinesBuilder';
 
 export class GltfBuilder {
     buffers: Array<GltfBuffer> = []
@@ -26,10 +29,23 @@ export class GltfBuilder {
     materials: Array<GltfMaterial> = []
     sceneNodes: Array<number> = []
 
-    createBuffer(bufferRaw: Buffer): number {
+    typedArrayToBase64(array: Uint8Array | Uint16Array | Float32Array): Base64Type {
+        const uint8Array = new Uint8Array(array.buffer);
+        let base64String
+        if (typeof Buffer !== "undefined") {
+            base64String = Buffer.from(uint8Array).toString("base64")
+        } else {
+            let binary = "";
+            uint8Array.forEach(byte => (binary += String.fromCharCode(byte)));
+            base64String = btoa(binary);
+        }
+        return { base64String, byteLength: uint8Array.byteLength };
+    }
+
+    createBuffer({ base64String, byteLength }: Base64Type): number {
         const buffer = {
-            uri: `data:application/octet-stream;base64,${bufferRaw.toString('base64')}`,
-            byteLength: bufferRaw.byteLength
+            uri: `data:application/octet-stream;base64,${base64String}`,
+            byteLength: byteLength
         }
         return this.addBuffer(buffer)
     }
@@ -39,11 +55,11 @@ export class GltfBuilder {
         return this.buffers.length - 1
     }
 
-    createBufferView(bufferId: number, buffer: Buffer, target: BufferViewTarget): number {
+    createBufferView(bufferId: number, { byteLength }: Base64Type, target: BufferViewTarget): number {
         const bufferView = {
             buffer: bufferId,
             byteOffset: 0,
-            byteLength: buffer.byteLength,
+            byteLength,
             target
         }
         return this.addBufferView(bufferView)
@@ -123,9 +139,10 @@ export class GltfBuilder {
     }
 
     createGltfPoints(pointCloud: PointCloud, bcf?: BaseColourFactor): void {
-        const { verticesCount: count, extent, vertices: pc_buffer } = pointCloud
-        const buffer = this.createBuffer(pc_buffer)
-        const bufferView = this.createBufferView(buffer, pc_buffer, BufferViewTarget.ARRAY_BUFFER)
+        const { verticesCount: count, extent, vertices } = pointCloud
+        const base64TypeVertices: Base64Type = this.typedArrayToBase64(vertices)
+        const buffer = this.createBuffer(base64TypeVertices)
+        const bufferView = this.createBufferView(buffer, base64TypeVertices, BufferViewTarget.ARRAY_BUFFER)
         const accessor = this.createAccessorVec3(bufferView, count, extent)
         const baseColorFactor = bcf || createRandomBaseColorFactor()
         const material = this.createMaterial(baseColorFactor)
@@ -143,10 +160,12 @@ export class GltfBuilder {
 
     createGltfLines(lines: Lines, mode: LineType, bcf?: BaseColourFactor): void {
         const { vertices, verticesCount, indexes, indexesCount, extent } = lines
-        const bufferVertices = this.createBuffer(vertices)
-        const bufferIndexes = this.createBuffer(indexes)
-        const bufferViewVertices = this.createBufferView(bufferVertices, vertices, BufferViewTarget.ARRAY_BUFFER)
-        const bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, BufferViewTarget.ELEMENT_ARRAY_BUFFER)
+        const base64TypeVertices: Base64Type = this.typedArrayToBase64(vertices)
+        const base64TypeIndexes: Base64Type = this.typedArrayToBase64(indexes)
+        const bufferVertices = this.createBuffer(base64TypeVertices)
+        const bufferIndexes = this.createBuffer(base64TypeIndexes)
+        const bufferViewVertices = this.createBufferView(bufferVertices, base64TypeVertices, BufferViewTarget.ARRAY_BUFFER)
+        const bufferViewIndexes = this.createBufferView(bufferIndexes, base64TypeIndexes, BufferViewTarget.ELEMENT_ARRAY_BUFFER)
         const accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent)
         const accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount)
         const baseColorFactor = bcf || createRandomBaseColorFactor()
@@ -165,12 +184,15 @@ export class GltfBuilder {
 
     createGltfTriangles(triangles: Triangles, mode: TriangleType, bcf?: BaseColourFactor): void {
         const { vertices, verticesCount, indexes, indexesCount, normals, normalsCount, extent } = triangles
-        const bufferVertices = this.createBuffer(vertices)
-        const bufferIndexes = this.createBuffer(indexes)
-        const bufferNormals = this.createBuffer(normals)
-        const bufferViewVertices = this.createBufferView(bufferVertices, vertices, BufferViewTarget.ARRAY_BUFFER)
-        const bufferViewIndexes = this.createBufferView(bufferIndexes, indexes, BufferViewTarget.ELEMENT_ARRAY_BUFFER)
-        const bufferViewNormals = this.createBufferView(bufferNormals, normals, BufferViewTarget.ARRAY_BUFFER)
+        const base64TypeVertices: Base64Type = this.typedArrayToBase64(vertices)
+        const base64TypeIndexes: Base64Type = this.typedArrayToBase64(indexes)
+        const base64TypeNormals: Base64Type = this.typedArrayToBase64(normals)
+        const bufferVertices = this.createBuffer(base64TypeVertices)
+        const bufferIndexes = this.createBuffer(base64TypeIndexes)
+        const bufferNormals = this.createBuffer(base64TypeNormals)
+        const bufferViewVertices = this.createBufferView(bufferVertices, base64TypeVertices, BufferViewTarget.ARRAY_BUFFER)
+        const bufferViewIndexes = this.createBufferView(bufferIndexes, base64TypeIndexes, BufferViewTarget.ELEMENT_ARRAY_BUFFER)
+        const bufferViewNormals = this.createBufferView(bufferNormals, base64TypeNormals, BufferViewTarget.ARRAY_BUFFER)
         const accessorVertices = this.createAccessorVec3(bufferViewVertices, verticesCount, extent)
         const accessorIndexes = this.createAccessorScalar(bufferViewIndexes, indexesCount)
         const accessorNormals = this.createAccessorVec3(bufferViewNormals, normalsCount, extent)
@@ -186,6 +208,19 @@ export class GltfBuilder {
         })
         const node = this.addNode({ mesh })
         this.addSceneNode(node)
+    }
+
+    createGltfTexts(pointsArrayArray: Point[][][], scale: number, bcf?: BaseColourFactor) {
+        pointsArrayArray.forEach(pointsArray => {
+            pointsArray.forEach(points => {
+                const lineBuilder = new LinesBuilder(points.length, points.length, scale, LineType.LINE_STRIP, bcf)
+                points.forEach(point => {
+                    const index = lineBuilder.addVertex(point)
+                    lineBuilder.addIndex(index)
+                })
+                lineBuilder.buildGltf(this)
+            })
+        })
     }
 
     build(): Gltf {

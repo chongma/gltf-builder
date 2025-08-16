@@ -6,8 +6,8 @@ import { BaseColourFactor, Extent, LineType, Lines, Point, PointObject } from '.
 import { GltfBuilder } from './GltfBuilder'
 
 export class LinesBuilder {
-    verticesArray: Float32Array
-    indexesArray: Uint16Array
+    vertices: Float32Array
+    indexes: Uint16Array
     extent: Extent
     indexCounter: number = -1
     vertexCounter: number = -1
@@ -19,14 +19,14 @@ export class LinesBuilder {
         private mode: LineType,
         private baseColorFactor?: BaseColourFactor
     ) {
-        this.verticesArray = new Float32Array(verticesCount * 3)
-        this.indexesArray = new Uint16Array(indexesCount)
+        this.vertices = new Float32Array(verticesCount * 3)
+        this.indexes = new Uint16Array(indexesCount)
         this.extent = initialiseExtent()
     }
 
     addIndex(index: number): number {
         this.indexCounter++
-        this.indexesArray[this.indexCounter] = index
+        this.indexes[this.indexCounter] = index
         return this.indexCounter
     }
 
@@ -37,9 +37,9 @@ export class LinesBuilder {
         checkExtents(vertex, this.extent)
         const pointOffset = this.vertexCounter * 3
         const [x, y, z] = vertex
-        this.verticesArray[pointOffset] = x
-        this.verticesArray[pointOffset + 1] = y
-        this.verticesArray[pointOffset + 2] = z
+        this.vertices[pointOffset] = x
+        this.vertices[pointOffset + 1] = y
+        this.vertices[pointOffset + 2] = z
         return this.vertexCounter
     }
 
@@ -51,9 +51,7 @@ export class LinesBuilder {
     }
 
     build(): Lines {
-        const vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer))
-        const indexes = Buffer.from(new Uint8Array(this.indexesArray.buffer))
-        const { verticesCount, indexesCount, extent } = this
+        const { verticesCount, indexesCount, extent, vertices, indexes } = this
         return {
             verticesCount,
             indexesCount,

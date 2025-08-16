@@ -17,14 +17,14 @@ var TrianglesBuilder = /** @class */ (function () {
         this.vertexCounter = -1;
         this.indexCounter = -1;
         this.normalCounter = -1;
-        this.verticesArray = new Float32Array(verticesCount * 3);
-        this.indexesArray = new Uint16Array(indexesCount);
-        this.normalsArray = new Float32Array(normalsCount * 3);
+        this.vertices = new Float32Array(verticesCount * 3);
+        this.indexes = new Uint16Array(indexesCount);
+        this.normals = new Float32Array(normalsCount * 3);
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
     }
     TrianglesBuilder.prototype.addIndex = function (index) {
         this.indexCounter++;
-        this.indexesArray[this.indexCounter] = index;
+        this.indexes[this.indexCounter] = index;
         return this.indexCounter;
     };
     TrianglesBuilder.prototype.addVertex = function (v) {
@@ -34,9 +34,9 @@ var TrianglesBuilder = /** @class */ (function () {
         vertex = (0, scalePoint_1.scalePoint)(vertex, this.scale);
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var x = vertex[0], y = vertex[1], z = vertex[2];
-        this.verticesArray[pointOffset] = x;
-        this.verticesArray[pointOffset + 1] = y;
-        this.verticesArray[pointOffset + 2] = z;
+        this.vertices[pointOffset] = x;
+        this.vertices[pointOffset + 1] = y;
+        this.vertices[pointOffset + 2] = z;
         return this.vertexCounter;
     };
     TrianglesBuilder.prototype.addNormal = function (n) {
@@ -44,9 +44,9 @@ var TrianglesBuilder = /** @class */ (function () {
         var normal = !Array.isArray(n) ? (0, convertPointObjectToPoint_1.convertPointObjectToPoint)(n) : n;
         var normalOffset = this.normalCounter * 3;
         var x = normal[0], y = normal[1], z = normal[2];
-        this.normalsArray[normalOffset] = x;
-        this.normalsArray[normalOffset + 1] = y;
-        this.normalsArray[normalOffset + 2] = z;
+        this.normals[normalOffset] = x;
+        this.normals[normalOffset + 1] = y;
+        this.normals[normalOffset + 2] = z;
         return this.normalCounter;
     };
     TrianglesBuilder.prototype.addTriangle = function (vertex1, vertex2, vertex3) {
@@ -58,10 +58,7 @@ var TrianglesBuilder = /** @class */ (function () {
         this.addIndex(index3);
     };
     TrianglesBuilder.prototype.build = function () {
-        var vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer));
-        var indexes = Buffer.from(new Uint8Array(this.indexesArray.buffer));
-        var normals = Buffer.from(new Uint8Array(this.normalsArray.buffer));
-        var _a = this, verticesCount = _a.verticesCount, indexesCount = _a.indexesCount, normalsCount = _a.normalsCount, extent = _a.extent;
+        var _a = this, verticesCount = _a.verticesCount, indexesCount = _a.indexesCount, normalsCount = _a.normalsCount, vertices = _a.vertices, indexes = _a.indexes, normals = _a.normals, extent = _a.extent;
         return {
             verticesCount: verticesCount,
             indexesCount: indexesCount,

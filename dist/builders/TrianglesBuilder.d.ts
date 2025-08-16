@@ -7,9 +7,9 @@ export declare class TrianglesBuilder {
     private scale;
     private mode;
     private baseColorFactor?;
-    verticesArray: Float32Array;
-    indexesArray: Uint16Array;
-    normalsArray: Float32Array;
+    vertices: Float32Array;
+    indexes: Uint16Array;
+    normals: Float32Array;
     extent: Extent;
     vertexCounter: number;
     indexCounter: number;

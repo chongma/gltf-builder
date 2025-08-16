@@ -13,7 +13,7 @@ var PointsBuilder = /** @class */ (function () {
         this.baseColorFactor = baseColorFactor;
         this.vertexCounter = -1;
         this.verticesCount = verticesCount;
-        this.verticesArray = new Float32Array(verticesCount * 3);
+        this.vertices = new Float32Array(verticesCount * 3);
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
         this.scale = scale;
     }
@@ -24,9 +24,9 @@ var PointsBuilder = /** @class */ (function () {
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var pointOffset = this.vertexCounter * 3;
         var x = vertex[0], y = vertex[1], z = vertex[2];
-        this.verticesArray[pointOffset] = x;
-        this.verticesArray[pointOffset + 1] = y;
-        this.verticesArray[pointOffset + 2] = z;
+        this.vertices[pointOffset] = x;
+        this.vertices[pointOffset + 1] = y;
+        this.vertices[pointOffset + 2] = z;
         return this.vertexCounter;
     };
     PointsBuilder.prototype.addVertices = function (vertices) {
@@ -34,8 +34,7 @@ var PointsBuilder = /** @class */ (function () {
         vertices.map(function (vertex) { return _this.addVertex(vertex); });
     };
     PointsBuilder.prototype.build = function () {
-        var vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer));
-        var _a = this, verticesCount = _a.verticesCount, extent = _a.extent;
+        var _a = this, verticesCount = _a.verticesCount, extent = _a.extent, vertices = _a.vertices;
         return {
             verticesCount: verticesCount,
             vertices: vertices,

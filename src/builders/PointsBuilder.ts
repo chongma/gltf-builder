@@ -6,7 +6,7 @@ import { BaseColourFactor, Extent, Point, PointCloud, PointObject } from '../typ
 import { GltfBuilder } from './GltfBuilder'
 
 export class PointsBuilder {
-    verticesArray: Float32Array
+    vertices: Float32Array
     extent: Extent
     vertexCounter: number = -1
 
@@ -16,7 +16,7 @@ export class PointsBuilder {
         private baseColorFactor?: BaseColourFactor
     ) {
         this.verticesCount = verticesCount
-        this.verticesArray = new Float32Array(verticesCount * 3)
+        this.vertices = new Float32Array(verticesCount * 3)
         this.extent = initialiseExtent()
         this.scale = scale
     }
@@ -28,9 +28,9 @@ export class PointsBuilder {
         checkExtents(vertex, this.extent)
         const pointOffset = this.vertexCounter * 3
         const [x, y, z] = vertex
-        this.verticesArray[pointOffset] = x
-        this.verticesArray[pointOffset + 1] = y
-        this.verticesArray[pointOffset + 2] = z
+        this.vertices[pointOffset] = x
+        this.vertices[pointOffset + 1] = y
+        this.vertices[pointOffset + 2] = z
         return this.vertexCounter
     }
 
@@ -39,8 +39,7 @@ export class PointsBuilder {
     }
 
     build(): PointCloud {
-        const vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer))
-        const { verticesCount, extent } = this
+        const { verticesCount, extent, vertices } = this
         return {
             verticesCount,
             vertices,

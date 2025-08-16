@@ -15,13 +15,13 @@ var LinesBuilder = /** @class */ (function () {
         this.baseColorFactor = baseColorFactor;
         this.indexCounter = -1;
         this.vertexCounter = -1;
-        this.verticesArray = new Float32Array(verticesCount * 3);
-        this.indexesArray = new Uint16Array(indexesCount);
+        this.vertices = new Float32Array(verticesCount * 3);
+        this.indexes = new Uint16Array(indexesCount);
         this.extent = (0, initialiseExtent_1.initialiseExtent)();
     }
     LinesBuilder.prototype.addIndex = function (index) {
         this.indexCounter++;
-        this.indexesArray[this.indexCounter] = index;
+        this.indexes[this.indexCounter] = index;
         return this.indexCounter;
     };
     LinesBuilder.prototype.addVertex = function (v) {
@@ -31,9 +31,9 @@ var LinesBuilder = /** @class */ (function () {
         (0, checkExtents_1.checkExtents)(vertex, this.extent);
         var pointOffset = this.vertexCounter * 3;
         var x = vertex[0], y = vertex[1], z = vertex[2];
-        this.verticesArray[pointOffset] = x;
-        this.verticesArray[pointOffset + 1] = y;
-        this.verticesArray[pointOffset + 2] = z;
+        this.vertices[pointOffset] = x;
+        this.vertices[pointOffset + 1] = y;
+        this.vertices[pointOffset + 2] = z;
         return this.vertexCounter;
     };
     LinesBuilder.prototype.addLine = function (vertex1, vertex2) {
@@ -43,9 +43,7 @@ var LinesBuilder = /** @class */ (function () {
         this.addIndex(index2);
     };
     LinesBuilder.prototype.build = function () {
-        var vertices = Buffer.from(new Uint8Array(this.verticesArray.buffer));
-        var indexes = Buffer.from(new Uint8Array(this.indexesArray.buffer));
-        var _a = this, verticesCount = _a.verticesCount, indexesCount = _a.indexesCount, extent = _a.extent;
+        var _a = this, verticesCount = _a.verticesCount, indexesCount = _a.indexesCount, extent = _a.extent, vertices = _a.vertices, indexes = _a.indexes;
         return {
             verticesCount: verticesCount,
             indexesCount: indexesCount,
