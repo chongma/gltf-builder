@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createRandomBaseColorFactor = exports.TriangleType = exports.LineType = exports.TrianglesBuilder = exports.PointsBuilder = exports.LinesBuilder = exports.GltfBuilder = void 0;
+exports.createRandomBaseColorFactor = exports.TriangleType = exports.LineType = exports.TextBuilder = exports.TrianglesBuilder = exports.PointsBuilder = exports.LinesBuilder = exports.GltfBuilder = void 0;
 var GltfBuilder_1 = require("./builders/GltfBuilder");
 Object.defineProperty(exports, "GltfBuilder", { enumerable: true, get: function () { return GltfBuilder_1.GltfBuilder; } });
 var LinesBuilder_1 = require("./builders/LinesBuilder");
@@ -9,6 +9,8 @@ var PointsBuilder_1 = require("./builders/PointsBuilder");
 Object.defineProperty(exports, "PointsBuilder", { enumerable: true, get: function () { return PointsBuilder_1.PointsBuilder; } });
 var TrianglesBuilder_1 = require("./builders/TrianglesBuilder");
 Object.defineProperty(exports, "TrianglesBuilder", { enumerable: true, get: function () { return TrianglesBuilder_1.TrianglesBuilder; } });
+var TextBuilder_1 = require("./builders/TextBuilder");
+Object.defineProperty(exports, "TextBuilder", { enumerable: true, get: function () { return TextBuilder_1.TextBuilder; } });
 var gltf_1 = require("./types/gltf");
 Object.defineProperty(exports, "LineType", { enumerable: true, get: function () { return gltf_1.LineType; } });
 Object.defineProperty(exports, "TriangleType", { enumerable: true, get: function () { return gltf_1.TriangleType; } });
