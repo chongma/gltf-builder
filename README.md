@@ -68,3 +68,6 @@ fs.writeFileSync(path, JSON.stringify(gltf));
 ```
 
 Gltf files can be viewed with https://gltf-viewer.donmccurdy.com/
+
+Publishing scoped public packages
+https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
