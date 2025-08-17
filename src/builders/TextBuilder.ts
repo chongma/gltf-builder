@@ -31,43 +31,57 @@ export class TextBuilder {
                 return add3(origin, scale3(right, x), scale3(up, -y));
             }
 
+            let currentX = 0;
+            let currentY = 0;
+
             for (let command of path.commands) {
                 if (command.type === 'M') {
                     // moveTo: start new polyline
                     if (points.length > 0) pointsArray.push(points);
                     points = [to3D(command.x, command.y)];
+                    currentX = command.x;
+                    currentY = command.y;
                 }
                 else if (command.type === 'L') {
                     points.push(to3D(command.x, command.y));
+                    currentX = command.x;
+                    currentY = command.y;
                 }
                 else if (command.type === 'Q') {
-                    // quadratic curve → subdivide into straight segments
-                    let prev = points[points.length - 1];
-                    for (let t = 0.1; t <= 1.0; t += 1 / curveSteps) {
-                        const x = (1 - t) * (1 - t) * prev[0] + 2 * (1 - t) * t * command.x1 + t * t * command.x;
-                        const y = (1 - t) * (1 - t) * prev[1] + 2 * (1 - t) * t * command.y1 + t * t * command.y;
+                    // Quadratic Bézier curve
+                    let x0 = currentX, y0 = currentY;
+                    let x1 = command.x1, y1 = command.y1;
+                    let x2 = command.x, y2 = command.y;
+
+                    for (let i = 1; i <= curveSteps; i++) {
+                        let t = i / curveSteps;
+                        let x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * x1 + t * t * x2;
+                        let y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * y1 + t * t * y2;
                         points.push(to3D(x, y));
                     }
+                    currentX = x2;
+                    currentY = y2;
                 }
                 else if (command.type === 'C') {
-                    // cubic curve → subdivide into straight segments
-                    let prev = points[points.length - 1];
-                    for (let t = 0.1; t <= 1.0; t += 1 / curveSteps) {
-                        const x = Math.pow(1 - t, 3) * prev[0] +
-                            3 * Math.pow(1 - t, 2) * t * command.x1 +
-                            3 * (1 - t) * t * t * command.x2 +
-                            Math.pow(t, 3) * command.x;
-                        const y = Math.pow(1 - t, 3) * prev[1] +
-                            3 * Math.pow(1 - t, 2) * t * command.y1 +
-                            3 * (1 - t) * t * t * command.y2 +
-                            Math.pow(t, 3) * command.y;
+                    // Cubic Bézier curve
+                    let x0 = currentX, y0 = currentY;
+                    let x1 = command.x1, y1 = command.y1;
+                    let x2 = command.x2, y2 = command.y2;
+                    let x3 = command.x, y3 = command.y;
+
+                    for (let i = 1; i <= curveSteps; i++) {
+                        let t = i / curveSteps;
+                        let mt = 1 - t;
+                        let x = mt * mt * mt * x0 + 3 * mt * mt * t * x1 + 3 * mt * t * t * x2 + t * t * t * x3;
+                        let y = mt * mt * mt * y0 + 3 * mt * mt * t * y1 + 3 * mt * t * t * y2 + t * t * t * y3;
                         points.push(to3D(x, y));
                     }
+                    currentX = x3;
+                    currentY = y3;
                 }
                 else if (command.type === 'Z') {
-                    // close path
                     if (points.length > 0) {
-                        points.push(points[0]);
+                        points.push(points[0]); // close the loop
                         pointsArray.push(points);
                         points = [];
                     }
@@ -75,7 +89,7 @@ export class TextBuilder {
             }
 
             if (points.length > 0) pointsArray.push(points)
-                
+
             xOffset += (glyph.advanceWidth ?? 1) * (fontSize / this.font.unitsPerEm)
         }
         this.pointsArrayArray.push(pointsArray)
